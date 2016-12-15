@@ -31,6 +31,7 @@ reset:
 vpath %.hex $(ARTIFACTS_DIR)/
 
 upload-IMUSensorTest : IMUSensorTest.hex
+upload-RangeSensorTest : RangeSensorTest.hex
 
 include $(BASE_PATH)/cpu.mk
 
