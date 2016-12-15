@@ -1,20 +1,30 @@
 #include "Arduino.h"
 #include "IMUSensor.h"
+#include "Kalman.h"
+
+Kalman kalmanX;
+double gyroX = 0;
 
 void setup() {
     Serial.begin(115200);
-    Serial.println("MultiShield");
-    Serial.println(__DATE__);
     IMU.init();
+    kalmanX.setAngle(90);
 }
 
-uint32_t count = 0;
+int count = 0;
 
 void loop() {
-    delay(100);
+    delay(10); // Update @ 100Hz
     IMU.update();
-    Serial.print(count++); Serial.print(", ");
-    Serial.print(IMU.data.accX); Serial.print(", ");
-    Serial.print(IMU.data.accZ); Serial.print(", ");
-    Serial.println();
+    double aAngle = atan2(IMU.data.accZ, IMU.data.accX)*(180.0/3.14) + 90;
+    double gAngleDiff = double(IMU.data.gyroY)*(250.0/32768.0);
+    double kAngle = kalmanX.getAngle(aAngle, gAngleDiff, 0.01);
+
+    /* Send data @ 20Hz */
+    if (++count == 5) {
+	Serial.print(kAngle);
+	Serial.print(",");
+	Serial.println();
+	count = 0;
+    }
 }
