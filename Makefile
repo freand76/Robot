@@ -32,6 +32,8 @@ vpath %.hex $(ARTIFACTS_DIR)/
 
 upload-IMUSensorTest : IMUSensorTest.hex
 upload-RangeSensorTest : RangeSensorTest.hex
+upload-MotorTest : MotorTest.hex
+upload-Robot : Robot.hex
 
 include $(BASE_PATH)/cpu.mk
 
